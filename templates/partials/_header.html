@@ -5,24 +5,29 @@
 
   <nav class="main-nav">
     <ul class="main-nav-list">
-      {% if not request.user.is_authenticated %}
-        <li><a class="main-nav-link" href="{% url "account_login" %}">Login</a></li>
-        <li><a class="main-nav-link btn-primary btn-signup" href="{% url "account_signup" %}">Get started</a></li>
+      {% if request.user.is_authenticated %}
+        <li><a href="#" class="main-nav-link">Action 1</a></li>
+        <li>
+          <a href="#" class="main-nav-link actions-link">
+            <span>Actions</span>
+            <ion-icon name="chevron-down-outline"></ion-icon>
+          </a>
+          <ul class="dropdown">
+            <li><a class="dropdown-link" href="#">Action</a></li>
+            <li><a class="dropdown-link" href="{% url "posts:create_view" %}">Create</a></li>
+            <li>
+              <form class="form-logout dropdown-link" action="{% url "account_logout" %}" method="POST">
+                {% csrf_token %}
+                <button class="btn-logout" type="submit">
+                  Logout
+                </button>
+              </form>
+            </li>
+          </ul>
+        </li>
       {% else %}
-        <li><a class="main-nav-link btn-create-post" href="{% url "posts:create_view" %}">
-          <ion-icon class="add-icon" name="add-outline"></ion-icon>
-          <span>Create post</span>
-        </a></li>
-        
-        <li><a class="main-nav-link">
-          <form class="form-logout" action="{% url "account_logout" %}" method="POST">
-            {% csrf_token %}
-            <button class="btn-profile" type="submit">
-              <ion-icon class="person-icon" name="person-circle-outline"></ion-icon>
-              <span>Profile</span>
-            </button>
-          </form>
-        </a></li>
+        <li><a href="{% url "account_login" %}" class="main-nav-link">Get started</a></li>
+      <li><a href="{% url "account_login" %}" class="main-nav-link btn-login">Sign in</a></li>
       {% endif %}
     </ul>
   </nav>
