@@ -326,3 +326,11 @@ li:hover .dropdown {
   font-size: 2rem;
   font-weight: 700;
 }
+
+.user-history h1 {
+  text-align: left;
+}
+
+.user-history .posts-section {
+  margin-top: 1rem;
+}

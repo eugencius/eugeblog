@@ -17,7 +17,7 @@
 */
 
 :root {
-  --primary-color: #C40C0C;
+  --primary-color: #c40c0c;
   --primary-shade-1: #b00b0b;
   --primary-shade-2: #760707;
   --primary-tint: #f9e7e7;
@@ -41,14 +41,14 @@ body {
   flex-direction: column;
 }
 
-a:link,
-a:visited {
+.primary-link:link,
+.primary-link:visited {
   color: var(--primary-color);
   transition: all 0.3s;
 }
 
-a:hover,
-a:active {
+.primary-link:hover,
+.primary-link:active {
   color: var(--primary-shade-2);
 }
 
@@ -65,7 +65,6 @@ textarea {
   font-weight: 500;
   cursor: pointer;
 }
-
 
 .default-font-size {
   font-size: 1.6rem;
@@ -100,19 +99,19 @@ textarea {
   pointer-events: none;
   outline: none;
   background-color: #fff;
-  transition: .3s all;
+  transition: 0.3s all;
 }
 
 .input-form:focus {
   border: 0.12rem solid rgba(196, 12, 12, 0.9);
 }
 
-.input-form:focus+.label-form {
+.input-form:focus + .label-form {
   color: var(--primary-color);
 }
 
-.input-form:focus+.label-form,
-.input-form:not(:placeholder-shown)+.label-form {
+.input-form:focus + .label-form,
+.input-form:not(:placeholder-shown) + .label-form {
   top: 0;
 }
 
@@ -130,3 +129,4 @@ textarea {
 .errorlist li {
   margin-bottom: 0.4rem;
 }
+

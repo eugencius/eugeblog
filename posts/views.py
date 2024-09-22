@@ -1,18 +1,19 @@
 import os
-
 from typing import Any
+
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import model_to_dict
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
-from django.forms import model_to_dict
-from .models import Post, Comment
-from django.contrib.auth import get_user_model
-from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from dotenv import load_dotenv
 
 from templates.static import notifications, utils
+
 from . import forms
+from .models import Comment, Post
 
 load_dotenv()
 
@@ -46,17 +47,51 @@ class PostDetails(generic.DetailView):
     template_name = "posts/details.html"
     pk_url_kwarg = "pk"
 
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if not request.session.get("history"):
+                request.session["history"] = []
+
+            history = request.session.get("history")
+            pk = str(self.get_object().pk)
+            print(history)
+
+            if pk not in history:
+                history.append(pk)
+
+            if pk in history and pk != history[0]:
+                history.remove(pk)
+                history.append(pk)
+
+            if len(history) > 3:
+                history.pop(1)
+
+            request.session["history"] = history
+
+        # del request.session["history"]
+
+        print(request.session.get("history"))
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         comments = Comment.objects.filter(post=self.get_object()).order_by("-id")
         post = self.get_object()
         is_author = post.author == self.request.user
+        history = self.request.session.get("history")
+        history_models = []
+
+        for pk in history:
+            history_models.append(Post.objects.get(pk=pk))
+
+        history_models.reverse()
 
         context.update(
             {
                 "comments": comments,
                 "qty_comments": comments.count(),
                 "is_author": is_author,
+                "history": history_models,
             }
         )
 

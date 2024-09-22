@@ -1,119 +1,103 @@
 {% extends "base.html" %}
 {% load humanize %}
-
-{% block title %}Post | {% endblock title %}
-
+{% block title %}
+    Post |
+{% endblock title %}
 {% block content %}
-  {% include "partials/_modal_deletion_confirm.html" %}
-
-  <div class="post-container">
-    <div class="post-w-70">
-      <div class="post-content">
-        <div class="post-img-block">
-          <img class="post-img" src="{{ post.image.url }}" alt="" />
-        </div>
-
-        <div class="post-title">
-          <h1>{{ post.title }}</h1>
-        </div>
-
-        <div class="post-details">
-          <div class="post-detail post-author">
-            <ion-icon
-              class="details-icon"
-              name="person-circle-outline"
-            ></ion-icon>
-            <span>{{ post.author.first_name }} {{ post.author.last_name }}</span>
-          </div>
-
-          <div class="post-detail post-creation-date">
-            <ion-icon class="details-icon" name="calendar-outline"></ion-icon>
-            <span>{{ post.created_at|naturalday|title }}</span>
-          </div>
-
-          <div class="post-detail post-category">
-            <ion-icon class="details-icon" name="pricetag-outline"></ion-icon>
-            <span>{{ post.category }}</span>
-          </div>
-        </div>
-
-        <div class="post-text-content">
-          <div class="post-excerpt">
-            {{ post.excerpt }}
-          </div>
-
-          <div class="post-text">
-            {{ post.content|safe }}
-          </div>
-        </div>
-
-        {% if is_author %}
-          <div class="action-buttons">
-            <a class="btn-action btn-edit" href="{% url "posts:edit_view" post.id %}">
-              <ion-icon name="create-outline"></ion-icon>
-              <span>Edit post</span>
-            </a>
-
-            <form action="{% url "posts:delete_view" post.id %}" class="form-deletion" method="post">
-              {% csrf_token %}
-              <button class="btn-action btn-delete" type="submit">
-                <ion-icon name="trash"></ion-icon>
-                <span>Delete post</span>
-              </button>
-            </form>
-          </div>
-        {% endif %}
-
-      </div>
-
-      <div class="post-comments-container">
-        <h3 class="comments-counter">{{ qty_comments }} comments</h3>
-
-        {% if request.user.is_authenticated %}
-          <form action="{% url "posts:comment_view" %}" class="form-comment" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="post" value="{{ post.pk }}">
-
-            <textarea
-              class="comment-input"
-              type="text"
-              name="comment"
-              rows='1'
-              placeholder="Add a comment..."
-              required
-            ></textarea>
-              
-            <div class="btns-container">
-              <button class="btn-primary btn-cancel" type="button">Cancel</button>
-              <button class="btn-primary btn-comment" type="submit">Comment</button>
+    {% include "partials/_modal_deletion_confirm.html" %}
+    <div class="post-container">
+        <div class="post-w-70">
+            <div class="post-content">
+                <div class="post-img-block">
+                    <img class="post-img" src="{{ post.image.url }}" alt="" />
+                </div>
+                <div class="post-title">
+                    <h1>{{ post.title }}</h1>
+                </div>
+                <div class="post-details">
+                    <div class="post-detail post-author">
+                        <ion-icon class="details-icon" name="person-circle-outline"></ion-icon>
+                        <span>{{ post.author.first_name }} {{ post.author.last_name }}</span>
+                    </div>
+                    <div class="post-detail post-creation-date">
+                        <ion-icon class="details-icon" name="calendar-outline"></ion-icon>
+                        <span>{{ post.created_at|naturalday|title }}</span>
+                    </div>
+                    <div class="post-detail post-category">
+                        <ion-icon class="details-icon" name="pricetag-outline"></ion-icon>
+                        <span>{{ post.category }}</span>
+                    </div>
+                </div>
+                <div class="post-text-content">
+                    <div class="post-excerpt">{{ post.excerpt }}</div>
+                    <div class="post-text">{{ post.content|safe }}</div>
+                </div>
+                {% if is_author %}
+                    <div class="action-buttons">
+                        <a class="btn-action btn-edit"
+                           href="{% url "posts:edit_view" post.id %}">
+                            <ion-icon name="create-outline"></ion-icon>
+                            <span>Edit post</span>
+                        </a>
+                        <form action="{% url "posts:delete_view" post.id %}"
+                              class="form-deletion"
+                              method="post">
+                            {% csrf_token %}
+                            <button class="btn-action btn-delete" type="submit">
+                                <ion-icon name="trash"></ion-icon>
+                                <span>Delete post</span>
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
             </div>
-          </form>
-        {% else %}
-          <h2 class="comment-login-message">
-            Any thoughts on this? 
-            <a class="font-w-600" href="{% url "account_login" %}?next={% url "posts:details_view" post.pk %}">Login</a> 
-            and come here to share them!</h2>
-        {% endif %}
-
-        <div class="post-comments">
-          {% for comment in comments %}
-            <div class="comment">
-              <ion-icon
-                class="user-icon"
-                name="person-circle-outline"
-              ></ion-icon>
-
-              <div class="comment-details">
-                <span class="comment-author">{{ comment.author.get_full_name }}</span> &mdash; {{ comment.created_at|naturalday|title}}
-              </div>
-              <p class="comment-text">
-                {{ comment.comment }}
-              </p>
-            </div>  
-          {% endfor %}
-
+            <div class="post-comments-container">
+                <h3 class="comments-counter">{{ qty_comments }} comments</h3>
+                {% if request.user.is_authenticated %}
+                    <form action="{% url "posts:comment_view" %}"
+                          class="form-comment"
+                          method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="post" value="{{ post.pk }}">
+                        <textarea class="comment-input"
+                                  type="text"
+                                  name="comment"
+                                  rows='1'
+                                  placeholder="Add a comment..."
+                                  required></textarea>
+                        <div class="btns-container">
+                            <button class="btn-primary btn-cancel" type="button">Cancel</button>
+                            <button class="btn-primary btn-comment" type="submit">Comment</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <h2 class="comment-login-message">
+                        Any thoughts on this?
+                        <a class="font-w-600 primary-link"
+                           href="{% url "account_login" %}?next={% url "posts:details_view" post.pk %}">Login</a>
+                        and come here to share them!
+                    </h2>
+                {% endif %}
+                <div class="post-comments">
+                    {% for comment in comments %}
+                        <div class="comment">
+                            <ion-icon class="user-icon" name="person-circle-outline"></ion-icon>
+                            <div class="comment-details">
+                                <span class="comment-author">{{ comment.author.get_full_name }}</span> &mdash; {{ comment.created_at|naturalday|title }}
+                            </div>
+                            <p class="comment-text">{{ comment.comment }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="user-history">
+                <h1>Here are the last posts you saw!</h1>
+                <div class="posts-section">
+                    {% for post in history %}
+                        {% include "partials/_post_card.html" %}
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 {% endblock content %}

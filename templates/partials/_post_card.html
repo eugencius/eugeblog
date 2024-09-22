@@ -1,0 +1,11 @@
+<div class="post-card">
+  <img class="post-img-card" src="{{ post.image.url }}" alt="" />
+  <div class="post-text-card">
+    <div class="post-title-card">{{ post.title }}</div>
+    <div class="post-excerpt-card">{{ post.excerpt }}</div>
+  </div>
+  <a class="read-icon-block" href="{% url "posts:details_view" post.pk %}">
+    <span>Read</span>
+    <ion-icon class="read-icon" name="arrow-forward-circle-outline"></ion-icon>
+  </a>
+</div>
